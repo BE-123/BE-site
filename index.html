@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beta Endeavors — Advisory Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0e0e0e;
+      --cream: #f7f4ee;
+      --gold: #c9a84c;
+      --gold-light: #e8d5a3;
+      --steel: #4a5568;
+      --line: rgba(14,14,14,0.12);
+      --nav-h: 72px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      z-index: 100;
+      transition: background 0.4s, box-shadow 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(247,244,238,0.95);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--line);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span { display: block; width: 24px; height: 1.5px; background: var(--ink); }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--cream);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: calc(var(--nav-h) + 4rem) 5vw 6rem 5vw;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5.5vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.3s forwards;
+    }
+    .hero-title em { font-style: italic; color: var(--gold); }
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--steel);
+      max-width: 420px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.5s forwards;
+    }
+    .cta-row {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.7s forwards;
+    }
+    .btn-primary {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      background: var(--ink);
+      color: var(--cream);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold); transform: translateY(-2px); }
+
+    .hero-right { position: relative; overflow: hidden; }
+    .hero-graphic { position: absolute; inset: 0; background: var(--ink); overflow: hidden; }
+    .hero-graphic::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201,168,76,0.18) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 80% at 80% 80%, rgba(201,168,76,0.08) 0%, transparent 60%);
+    }
+    .grid-lines {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridDrift 20s linear infinite;
+    }
+    @keyframes gridDrift { from { transform: translateY(0); } to { transform: translateY(60px); } }
+    .orbit-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.15);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .orbit-ring:nth-child(3) { width: 280px; height: 280px; animation: spin 30s linear infinite; }
+    .orbit-ring:nth-child(4) { width: 450px; height: 450px; animation: spin 50s linear infinite reverse; }
+    .orbit-ring:nth-child(5) { width: 650px; height: 650px; animation: spin 80s linear infinite; }
+    .orbit-dot { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); top: -3px; left: calc(50% - 3px); }
+    @keyframes spin { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      padding: 1.1rem 0;
+    }
+    .marquee-track { display: flex; gap: 4rem; animation: marquee 22s linear infinite; white-space: nowrap; }
+    .marquee-item { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--steel); opacity: 0.5; flex-shrink: 0; }
+    .marquee-sep { color: var(--gold); opacity: 0.8; flex-shrink: 0; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* SHARED SECTION STYLES */
+    .section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 4rem; }
+    .section-num { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; color: var(--gold); letter-spacing: 0.1em; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; line-height: 1.2; }
+    .section-line { flex: 1; height: 1px; background: var(--line); margin-left: 1rem; margin-bottom: 4px; }
+
+    /* SERVICES */
+    .services { padding: 8rem 5vw; }
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .service-card {
+      padding: 3rem 2.5rem;
+      border: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-card:hover { background: rgba(201,168,76,0.04); }
+    .service-icon { font-size: 1.8rem; margin-bottom: 1.5rem; display: block; }
+    .service-name { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; margin-bottom: 0.75rem; letter-spacing: 0.02em; }
+    .service-desc { font-size: 0.88rem; color: var(--steel); line-height: 1.7; }
+
+    /* ABOUT */
+    .about-section {
+      padding: 8rem 5vw;
+      background: var(--ink);
+      color: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    .about-section::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -100px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .about-section .section-title { color: var(--cream); }
+    .about-section .section-line { background: rgba(247,244,238,0.1); }
+    .profile-body { display: grid; grid-template-columns: 320px 1fr; gap: 6rem; align-items: start; }
+    .profile-photo-wrap { position: sticky; top: calc(var(--nav-h) + 2rem); }
+    .photo-frame { position: relative; display: inline-block; width: 100%; }
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      top: 14px; left: 14px;
+      right: -14px; bottom: -14px;
+      border: 1px solid rgba(201,168,76,0.45);
+      z-index: 0;
+    }
+    .photo-placeholder {
+      position: relative; z-index: 1;
+      width: 100%; aspect-ratio: 3/4;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(247,244,238,0.08);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .photo-initials { font-family: 'Cormorant Garamond', serif; font-size: 6rem; font-weight: 300; color: var(--gold); opacity: 0.35; line-height: 1; }
+    .photo-note { font-size: 0.68rem; letter-spacing: 0.08em; color: rgba(247,244,238,0.2); margin-top: 1rem; text-align: center; padding: 0 1.5rem; }
+    .photo-actual { position: relative; z-index: 1; width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+    .profile-meta { margin-top: 2rem; }
+    .profile-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--cream); margin-bottom: 0.25rem; }
+    .profile-role { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.1rem; }
+    .profile-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .profile-link {
+      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(247,244,238,0.4); text-decoration: none;
+      border-bottom: 1px solid rgba(247,244,238,0.15); padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .profile-link:hover { color: var(--gold); border-color: var(--gold); }
+    .bio-content h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.7rem, 2.5vw, 2.2rem);
+      font-weight: 300; line-height: 1.3;
+      color: var(--cream); margin-bottom: 1.75rem;
+    }
+    .bio-content h2 em { font-style: italic; color: var(--gold-light); }
+    .bio-lead {
+      font-size: 1.05rem; line-height: 1.8;
+      color: rgba(247,244,238,0.85); margin-bottom: 1.75rem;
+      border-left: 2px solid var(--gold); padding-left: 1.5rem;
+    }
+    .bio-body { font-size: 0.92rem; color: rgba(247,244,238,0.55); line-height: 1.9; }
+    .bio-body p + p { margin-top: 1.2rem; }
+    .expertise-grid {
+      margin-top: 3rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; border: 1px solid rgba(247,244,238,0.08);
+    }
+    .expertise-item {
+      padding: 1.1rem 1.5rem;
+      border: 1px solid rgba(247,244,238,0.08);
+      font-size: 0.82rem; color: rgba(247,244,238,0.45);
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .expertise-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+    /* CONTACT */
+    .contact-section { padding: 8rem 5vw; }
+    .contact-section .section-title { color: var(--ink); }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .contact-intro {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 2.2vw, 2rem);
+      font-weight: 300;
+      line-height: 1.35;
+      margin-bottom: 1.5rem;
+    }
+    .contact-intro em { font-style: italic; color: var(--gold); }
+    .contact-blurb { font-size: 0.92rem; color: var(--steel); line-height: 1.8; max-width: 380px; margin-bottom: 3rem; }
+    .contact-methods { display: flex; flex-direction: column; gap: 1.5rem; }
+    .contact-method { display: flex; flex-direction: column; gap: 0.2rem; }
+    .method-label { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--steel); opacity: 0.5; }
+    .method-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; color: var(--ink);
+      text-decoration: none; border-bottom: 1px solid transparent;
+      display: inline-block; transition: color 0.2s, border-color 0.2s;
+    }
+    .method-value:hover { color: var(--gold); border-color: var(--gold); }
+    .contact-right { background: var(--ink); padding: 3rem; }
+    .contact-form { display: flex; flex-direction: column; gap: 1.25rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-field { display: flex; flex-direction: column; gap: 0.45rem; }
+    .form-field label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(247,244,238,0.4); }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      background: rgba(247,244,238,0.05);
+      border: 1px solid rgba(247,244,238,0.12);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 300;
+      padding: 0.8rem 1rem;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      appearance: none; border-radius: 0;
+    }
+    .form-field input::placeholder, .form-field textarea::placeholder { color: rgba(247,244,238,0.2); }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.04);
+    }
+    .form-field select option { background: var(--ink); color: var(--cream); }
+    .form-field textarea { resize: vertical; min-height: 120px; }
+    .btn-submit {
+      width: 100%; padding: 1rem 2rem;
+      background: var(--gold); color: var(--ink);
+      border: none; font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.25s, transform 0.2s;
+      margin-top: 0.25rem;
+    }
+    .btn-submit:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .form-note { font-size: 0.72rem; color: rgba(247,244,238,0.25); text-align: center; margin-top: 0.5rem; }
+    .form-success { display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4rem 2rem; }
+    .form-success.visible { display: flex; }
+    .success-icon { font-size: 2.5rem; color: var(--gold); margin-bottom: 1.25rem; }
+    .success-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: var(--cream); margin-bottom: 0.5rem; }
+    .success-body { font-size: 0.88rem; color: rgba(247,244,238,0.45); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 2.5rem 5vw;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    footer .nav-logo { font-size: 1.1rem; }
+    .footer-copy { font-size: 0.78rem; color: var(--steel); opacity: 0.5; }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a {
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--steel); text-decoration: none; opacity: 0.5; transition: opacity 0.2s;
+    }
+    .footer-links a:hover { opacity: 1; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .profile-body { grid-template-columns: 260px 1fr; gap: 4rem; }
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding-top: calc(var(--nav-h) + 3rem); min-height: 90vh; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+      .profile-body { grid-template-columns: 1fr; gap: 3rem; }
+      .profile-photo-wrap { position: static; max-width: 280px; }
+      .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card { padding: 2.25rem 1.75rem; }
+      .expertise-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .contact-right { padding: 2rem 1.5rem; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .footer-links { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="mainNav">
+    <a class="nav-logo" href="#hero">Beta<span>.</span>Endeavors</a>
+    <ul class="nav-links">
+      <li><a href="#services">What We Do</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="menuBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#services" onclick="closeMenu()">What We Do</a>
+    <a href="#about" onclick="closeMenu()">About</a>
+    <a href="#contact" onclick="closeMenu()">Contact</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-left">
+      <h1 class="hero-title">
+        Where bold<br><em>ideas</em> meet<br>disciplined<br>execution
+      </h1>
+      <p class="hero-sub">
+        Beta Endeavors partners with founders, investors, and enterprise leaders to lead through the complexity required to deliver extraordinary technology ventures.
+      </p>
+      <div class="cta-row">
+        <a href="#contact" class="btn-primary">Get in Touch</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-graphic">
+        <div class="grid-lines"></div>
+        <div class="orbit-ring"><div class="orbit-dot"></div></div>
+        <div class="orbit-ring"><div class="orbit-dot"></div></div>
+        <div class="orbit-ring"><div class="orbit-dot"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Strategic Advisory</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Product Development</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Venture Support</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Go-to-Market</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Org Design</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Board Success</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Strategic Advisory</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Product Development</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Venture Support</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Go-to-Market</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Org Design</span><span class="marquee-sep">✦</span>
+      <span class="marquee-item">Board Success</span><span class="marquee-sep">✦</span>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">What We Do</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-icon">◈</span>
+        <h3 class="service-name">Strategic Advisory</h3>
+        <p class="service-desc">Strategic counsel for founders and executives navigating pivotal decisions to build break-out ventures.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">⬡</span>
+        <h3 class="service-name">Product Development</h3>
+        <p class="service-desc">Bridging technical depth with business acumen to define product vision, build roadmaps, and accelerate innovation cycles.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">◎</span>
+        <h3 class="service-name">Venture Support</h3>
+        <p class="service-desc">Partnering with early and growth-stage companies on fundraising, capital deployment, and exit realization.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">⬨</span>
+        <h3 class="service-name">Go-to-Market</h3>
+        <p class="service-desc">Crafting and executing GTM playbooks that create durable, differentiated market presence.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">◫</span>
+        <h3 class="service-name">Org Design</h3>
+        <p class="service-desc">Building high-performance leadership teams, organizational structure, and operating rhythms that reliably deliver scaling success.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">◉</span>
+        <h3 class="service-name">Board Success</h3>
+        <p class="service-desc">Helping leadership teams and Boards communicate with candor to align on key decisions and deliver venture success.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">About</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="profile-body">
+      <div class="profile-photo-wrap">
+        <div class="photo-frame">
+          <img src="arun-gupta.jpg" alt="Arun Gupta" class="photo-actual" />
+        </div>
+        <div class="profile-meta">
+        </div>
+      </div>
+      <div class="bio-content">
+        <p class="bio-lead">
+          Arun Gupta is a seasoned founder and executive with 20 years of venture-backed start-up experience, including 3 IPOs, 10+ exits and significant CEO, Chairman, and Independent Director service.
+        </p>
+        <div class="bio-body">
+          <p>Arun Gupta is an experienced founder, CEO, and Board Chairman of high-impact, high-ambition technology start-ups. His biggest current involvement is serving as Executive Chairman of the Board of Parallel Systems, an autonomy company building battery-electric, self-propelled rail cars and the software operating system to power autonomous freight operations.</p>
+          <p>Arun previously played key leadership and Board roles in the founding and/or scale-ups of over 10 start-ups, including Quartet Health, iD Tech, Accolade, and Palantir Technologies. Earlier in his career, Arun was a Venture Builder and General Partner at Accretive, which built over 10 industry-defining technology companies including several IPOs. He also held roles at McKinsey & Company and The World Bank.</p>
+          <p>Arun earned a Master's Degree from the Harvard Kennedy School where he was a Reynolds Fellow for Social Entrepreneurship and graduated with honors from Duke University. He currently serves on several private company Boards, not-for-profit Boards, and advises venture capital and growth equity investors as well as large corporates on AI, technology, and innovation.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Get in Touch</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-inner">
+      <div class="contact-left">
+        <h3 class="contact-intro">Every great partnership begins with a single <em>conversation.</em></h3>
+        <div class="contact-methods">
+          <div class="contact-method">
+            <span class="method-label">Email</span>
+            <a href="mailto:hello@betaendeavors.com" class="method-value">hello@betaendeavors.com</a>
+          </div>
+          <div class="contact-method">
+            <span class="method-label">LinkedIn</span>
+            <a href="https://www.linkedin.com/in/arungupta1/" target="_blank" class="method-value">linkedin.com/in/arungupta1</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-right">
+        <div id="contactForm">
+          <form class="contact-form" id="theForm">
+            <div class="form-row">
+              <div class="form-field">
+                <label for="fname">First Name</label>
+                <input type="text" id="fname" name="fname" placeholder="Jane" />
+              </div>
+              <div class="form-field">
+                <label for="lname">Last Name</label>
+                <input type="text" id="lname" name="lname" placeholder="Smith" />
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="jane@company.com" required />
+            </div>
+            <div class="form-field">
+              <label for="company">Company / Organization</label>
+              <input type="text" id="company" name="company" placeholder="Acme Inc." />
+            </div>
+            <div class="form-field">
+              <label for="message">Tell me about your situation</label>
+              <textarea id="message" name="message" placeholder="Give me some context — what are you working on and what kind of help would be most valuable?"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Send Message →</button>
+
+          </form>
+        </div>
+        <div class="form-success" id="formSuccess">
+          <div class="success-icon">✦</div>
+          <h3 class="success-title">Message sent</h3>
+          <p class="success-body">Thanks for reaching out. I'll be in touch within 48 hours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a class="nav-logo" href="#hero">Beta<span>.</span>Endeavors</a>
+    <span class="footer-copy">© 2025 Beta Endeavors. All rights reserved.</span>
+    <ul class="footer-links">
+      <li><a href="#services">What We Do</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+    function closeMenu() { mobileMenu.classList.remove('open'); }
+
+    document.getElementById('theForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const fname = document.getElementById('fname').value;
+      const lname = document.getElementById('lname').value;
+      const email = document.getElementById('email').value;
+      const company = document.getElementById('company').value;
+      const interest = document.getElementById('interest').value;
+      const message = document.getElementById('message').value;
+      const subject = encodeURIComponent('Beta Endeavors Inquiry — ' + (interest || 'General'));
+      const body = encodeURIComponent('Name: ' + fname + ' ' + lname + '\nEmail: ' + email + '\nCompany: ' + company + '\nInterest: ' + interest + '\n\n' + message);
+      window.location.href = 'mailto:hello@betaendeavors.com?subject=' + subject + '&body=' + body;
+      document.getElementById('contactForm').style.display = 'none';
+      document.getElementById('formSuccess').classList.add('visible');
+    });
+  </script>
+</body>
+</html>
