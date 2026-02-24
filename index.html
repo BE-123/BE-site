@@ -585,7 +585,7 @@
 
       <div class="contact-right">
         <div id="contactForm">
-          <form class="contact-form" id="theForm" action="https://formspree.io/f/xykdbver" method="POST">
+          <form class="contact-form" id="theForm">
             <div class="form-row">
               <div class="form-field">
                 <label for="fname">First Name</label>
@@ -636,6 +636,7 @@
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 40);
     });
+
     const menuBtn = document.getElementById('menuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('open'));
@@ -643,6 +644,7 @@
 
     document.getElementById('theForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+      e.stopPropagation();
       const form = e.target;
       const data = new FormData(form);
       try {
@@ -655,4 +657,13 @@
           document.getElementById('contactForm').style.display = 'none';
           document.getElementById('formSuccess').classList.add('visible');
         } else {
-          
+          alert('Something went wrong. Please email us directly at hello@betaendeavors.com');
+        }
+      } catch (err) {
+        alert('Something went wrong. Please email us directly at hello@betaendeavors.com');
+      }
+      return false;
+    });
+  </script>
+</body>
+</html>
