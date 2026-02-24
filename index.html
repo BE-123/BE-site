@@ -196,6 +196,9 @@
       padding: 1.1rem 0;
     }
     .marquee-track { display: flex; gap: 4rem; animation: marquee 22s linear infinite; white-space: nowrap; }
+    @media (max-width: 600px) {
+      .marquee-track { animation-duration: 10s; gap: 2rem; }
+    }
     .marquee-item { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--steel); opacity: 0.5; flex-shrink: 0; }
     .marquee-sep { color: var(--gold); opacity: 0.8; flex-shrink: 0; }
     @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
@@ -574,7 +577,7 @@
         <div class="contact-methods">
           <div class="contact-method">
             <span class="method-label">Email</span>
-            <a href="mailto:hello@betaendeavors.com" class="method-value">hello@betaendeavors.com</a>
+            <a href="/cdn-cgi/l/email-protection#83ebe6efefecc3e1e6f7e2e6ede7e6e2f5ecf1f0ade0ecee" class="method-value"><span class="__cf_email__" data-cfemail="f9919c959596b99b9c8d989c979d9c988f968b8ad79a9694">[email&#160;protected]</span></a>
           </div>
           <div class="contact-method">
             <span class="method-label">LinkedIn</span>
@@ -631,7 +634,7 @@
     </ul>
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const nav = document.getElementById('mainNav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 40);
@@ -655,12 +658,4 @@
           document.getElementById('contactForm').style.display = 'none';
           document.getElementById('formSuccess').classList.add('visible');
         } else {
-          alert('Something went wrong. Please email us directly at hello@betaendeavors.com');
-        }
-      } catch (err) {
-        alert('Something went wrong. Please email us directly at hello@betaendeavors.com');
-      }
-    });
-  </script>
-</body>
-</html>
+          
