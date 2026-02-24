@@ -49,14 +49,15 @@
       box-shadow: 0 1px 0 var(--line);
     }
     .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.35rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
       text-decoration: none;
+      line-height: 0;
     }
-    .nav-logo span { color: var(--gold); }
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+    }
     .nav-links { display: flex; gap: 2.5rem; list-style: none; }
     .nav-links a {
       font-size: 0.8rem;
@@ -389,7 +390,7 @@
       justify-content: space-between;
       flex-wrap: wrap; gap: 1rem;
     }
-    footer .nav-logo { font-size: 1.1rem; }
+    footer .nav-logo img { height: 28px; }
     .footer-copy { font-size: 0.78rem; color: var(--steel); opacity: 0.5; }
     .footer-links { display: flex; gap: 1.5rem; list-style: none; }
     .footer-links a {
@@ -432,7 +433,7 @@
 <body>
 
   <nav id="mainNav">
-    <a class="nav-logo" href="#hero">Beta<span>.</span>Endeavors</a>
+    <a class="nav-logo" href="#hero"><img src="logo.svg" alt="Beta Endeavors" /></a>
     <ul class="nav-links">
       <li><a href="#services">What We Do</a></li>
       <li><a href="#about">About</a></li>
@@ -573,7 +574,7 @@
         <div class="contact-methods">
           <div class="contact-method">
             <span class="method-label">Email</span>
-            <a href="/cdn-cgi/l/email-protection#2149444d4d4e6143445540444f454440574e53520f424e4c" class="method-value"><span class="__cf_email__" data-cfemail="e28a878e8e8da280879683878c868783948d9091cc818d8f">[email&#160;protected]</span></a>
+            <a href="mailto:hello@betaendeavors.com" class="method-value">hello@betaendeavors.com</a>
           </div>
           <div class="contact-method">
             <span class="method-label">LinkedIn</span>
@@ -621,7 +622,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <a class="nav-logo" href="#hero">Beta<span>.</span>Endeavors</a>
+    <a class="nav-logo" href="#hero"><img src="logo.svg" alt="Beta Endeavors" /></a>
     <span class="footer-copy">© 2025 Beta Endeavors. All rights reserved.</span>
     <ul class="footer-links">
       <li><a href="#services">What We Do</a></li>
@@ -630,7 +631,7 @@
     </ul>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     const nav = document.getElementById('mainNav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 40);
