@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Five-Star Forum — Topic Vote</title>
+  <style>
+    /* ─── Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f7f5;
+      --card: #ffffff;
+      --border: #e4e3df;
+      --accent: #1a6b3c;
+      --accent-light: #e8f5ee;
+      --accent-hover: #155530;
+      --text: #1c1c1a;
+      --muted: #6b6b67;
+      --done-bg: #f3f3f1;
+      --done-text: #aaa9a5;
+      --voted-bg: #e8f5ee;
+      --voted-border: #1a6b3c;
+      --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 8px rgba(0,0,0,.04);
+      --radius: 10px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ─── Auth overlay ──────────────────────────────────────────── */
+    #auth-overlay {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg);
+      z-index: 100;
+      padding: 24px;
+    }
+
+    .auth-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 36px;
+      width: 100%; max-width: 400px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.1);
+      text-align: center;
+    }
+
+    .auth-card .logo {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    .auth-card h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      letter-spacing: -.3px;
+    }
+
+    .auth-card .subtitle {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .auth-card label {
+      display: block;
+      text-align: left;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .auth-card input, .auth-card select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: var(--text);
+      background: #fff;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .auth-card input:focus, .auth-card select:focus {
+      border-color: var(--accent);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+      margin-top: 4px;
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:active { transform: scale(.98); }
+
+    .auth-error {
+      color: #c0392b;
+      font-size: 0.85rem;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* ─── Step indicator ────────────────────────────────────────── */
+    .steps {
+      display: flex; gap: 8px; justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background .2s;
+    }
+    .step-dot.active { background: var(--accent); }
+
+    /* ─── Main app ──────────────────────────────────────────────── */
+    #app { display: none; }
+
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-logo { font-size: 1.3rem; }
+
+    .header-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -.2px;
+    }
+
+    .header-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .header-user {
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .user-badge {
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .sign-out-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .sign-out-btn:hover { border-color: var(--muted); color: var(--text); }
+
+    /* ─── Content ───────────────────────────────────────────────── */
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -.2px;
+    }
+
+    .section-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ─── Topic row ─────────────────────────────────────────────── */
+    .topic-row {
+      display: flex;
+      align-items: center;
+      padding: 13px 22px;
+      border-bottom: 1px solid var(--border);
+      gap: 14px;
+      transition: background .1s;
+    }
+
+    .topic-row:last-child { border-bottom: none; }
+    .topic-row:hover:not(.done) { background: #fafaf8; }
+
+    .topic-row.done {
+      background: var(--done-bg);
+    }
+
+    .topic-row.my-voted {
+      background: var(--voted-bg);
+    }
+
+    .topic-text {
+      flex: 1;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .topic-row.done .topic-text {
+      text-decoration: line-through;
+      color: var(--done-text);
+    }
+
+    .done-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--done-text);
+      background: #e8e8e5;
+      border-radius: 20px;
+      padding: 2px 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .vote-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .vote-count {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+      min-width: 18px;
+      text-align: right;
+    }
+
+    .vote-count.has-votes { color: var(--accent); }
+
+    .vote-btn {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all .15s;
+      flex-shrink: 0;
+    }
+
+    .vote-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .vote-btn.voted {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .vote-btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .voters-list {
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ─── Footer note ───────────────────────────────────────────── */
+    .footer-note {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 32px;
+    }
+
+    /* ─── Loading ───────────────────────────────────────────────── */
+    .loading-row {
+      padding: 16px 22px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* ─── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 500px) {
+      .auth-card { padding: 32px 20px; }
+      header { padding: 12px 16px; }
+      main { padding: 20px 12px 48px; }
+      .topic-row { padding: 12px 14px; }
+      .section-header { padding: 14px 14px 12px; }
+      .voters-list { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     AUTH OVERLAY
+════════════════════════════════════════════════════════════ -->
+<div id="auth-overlay">
+  <div class="auth-card">
+    <div class="logo">⭐</div>
+    <h1>Five-Star Forum</h1>
+    <p class="subtitle">Topic Voting — 2025–26</p>
+
+    <!-- Step dots -->
+    <div class="steps">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+    </div>
+
+    <!-- Step 1: Access code -->
+    <div id="step-code">
+      <label for="code-input">Access Code</label>
+      <input
+        type="password"
+        id="code-input"
+        placeholder="Enter forum access code"
+        autocomplete="off"
+      />
+      <button class="btn-primary" onclick="checkCode()">Continue →</button>
+      <p class="auth-error" id="code-error">Incorrect code — try again.</p>
+    </div>
+
+    <!-- Step 2: Name picker -->
+    <div id="step-name" style="display:none">
+      <label for="name-select">Who are you?</label>
+      <select id="name-select">
+        <option value="">— Select your name —</option>
+        <option value="Arun">Arun</option>
+        <option value="Anthony">Anthony</option>
+        <option value="Benn">Benn</option>
+        <option value="Matt">Matt</option>
+        <option value="Nate">Nate</option>
+        <option value="Parker">Parker</option>
+        <option value="Patrick">Patrick</option>
+      </select>
+      <button class="btn-primary" onclick="enterApp()">Enter Forum Vote →</button>
+      <p class="auth-error" id="name-error">Please select your name.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN APP
+════════════════════════════════════════════════════════════ -->
+<div id="app">
+  <header>
+    <div class="header-left">
+      <span class="header-logo">⭐</span>
+      <div>
+        <div class="header-title">Five-Star Forum</div>
+        <div class="header-sub">Vote on topics for next meeting</div>
+      </div>
+    </div>
+    <div class="header-user">
+      <span class="user-badge" id="user-display"></span>
+      <button class="sign-out-btn" onclick="signOut()">Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- FSFE Parking Lot -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">FSFE Parking Lot</span>
+        <span class="section-meta" id="fsfe-meta"></span>
+      </div>
+      <div id="fsfe-list"><div class="loading-row">Loading…</div></div>
+    </div>
+
+    <!-- Learning / Topical Parking Lot -->
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">Learning / Topical Parking Lot</span>
+        <span class="section-meta" id="learning-meta"></span>
+      </div>
+      <div id="learning-list"><div class="loading-row">Loading…</div></div>
+    </div>
+
+    <p class="footer-note">Votes are live — results visible to all members. Click ▲ again to remove your vote.</p>
+  </main>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     FIREBASE + APP LOGIC
+════════════════════════════════════════════════════════════ -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import {
+    getFirestore,
+    doc, setDoc, deleteDoc,
+    collection, onSnapshot
+  } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  // ─────────────────────────────────────────────────────────────
+  // ⚙️  CONFIGURATION — replace with your Firebase project config
+  // ─────────────────────────────────────────────────────────────
+  const firebaseConfig = {
+    apiKey:            "AIzaSyBPmwIV_mHpSyW0PvCRYGswfr5Wy-KbtOI",
+    authDomain:        "five-star-forum.firebaseapp.com",
+    projectId:         "five-star-forum",
+    storageBucket:     "five-star-forum.firebasestorage.app",
+    messagingSenderId: "1045014131337",
+    appId:             "1:1045014131337:web:a11683fdab25ab90220c58"
+  };
+
+  // ─────────────────────────────────────────────────────────────
+  // 🔑  ACCESS CODE — change this to your preferred passphrase
+  // ─────────────────────────────────────────────────────────────
+  const ACCESS_CODE = "FORUM2026";
+
+  // ─────────────────────────────────────────────────────────────
+  // 📋  TOPIC DATA
+  // ─────────────────────────────────────────────────────────────
+  const TOPICS = {
+    fsfe: [
+      { id: "fsfe_01", text: "Parker: rental business deep dive plus Cat transition", done: true },
+      { id: "fsfe_02", text: "Matt: sorting Everfence to a settlement", done: true },
+      { id: "fsfe_03", text: "Matt: new projects, creative energy", done: true },
+      { id: "fsfe_04", text: "Anthony: cash flow strategy from the investments", done: true },
+      { id: "fsfe_05", text: "Patrick: searching for passion in next chapter design?", done: true },
+      { id: "fsfe_06", text: "Benn: Hawaii migration on the business, new interests", done: false },
+      { id: "fsfe_07", text: "Anthony: your new vineyard project / what's next life design", done: false },
+      { id: "fsfe_08", text: "Parker: clicking into your transition with your father into running the business — the family dynamics around life and business that you've touched on a lot", done: false },
+      { id: "fsfe_09", text: "Benn: Relationship with your father and how you want to live similarly / differently", done: false },
+      { id: "fsfe_10", text: "Faith — role it plays in one of our lives over time and how does or does not make its way into family life", done: false },
+      { id: "fsfe_11", text: "Anthony: your health, what's possible, what can be done, how you feel about it", done: false },
+      { id: "fsfe_12", text: "Nate: new fund structure, navigating your partners evolving", done: false },
+      { id: "fsfe_13", text: "Nate: burden of managing your investors", done: false },
+      { id: "fsfe_14", text: "Parker: nutrition & health (seconded by Matt, Patrick)", done: false },
+    ],
+    learning: [
+      { id: "lrn_01", text: "Nate: retention of high performing talent", done: true },
+      { id: "lrn_02", text: "How we CEO — window into how we spend our time, results of any 360 or coaching feedback, how we're strong and where gapped. Learning and sharing. (maybe Parker)", done: false },
+      { id: "lrn_03", text: "Dealing with inflation", done: false },
+      { id: "lrn_04", text: "Personal investments review, asset allocation, key structures", done: false },
+      { id: "lrn_05", text: "Anthony: executed a sale process record speed. Share how.", done: false },
+      { id: "lrn_06", text: "Anthony: new role as an employee, how succeed, what to expect", done: false },
+      { id: "lrn_07", text: "Parker: long-term incentive plan details on what worked, how structured", done: false },
+      { id: "lrn_08", text: "Parker: faster store opening process?", done: false },
+      { id: "lrn_09", text: "Nate: how deal when both partners maxing out work stress at the same time", done: false },
+      { id: "lrn_10", text: "Patrick: how manage taking time for self with family demands", done: false },
+      { id: "lrn_11", text: "Benn: contingency planning, how had success with Plan Bs", done: false },
+      { id: "lrn_12", text: "Benn: geopolitical state of affairs / Iran", done: false },
+      { id: "lrn_13", text: "Arun: therapy, what working or learning", done: false },
+      { id: "lrn_14", text: "Arun: learning challenges with kids, how to deal with", done: false },
+      { id: "lrn_15", text: "Arun: leadership off-sites in your companies, what's working, share agendas", done: false },
+    ]
+  };
+
+  // ─────────────────────────────────────────────────────────────
+  // 🔧  STATE
+  // ─────────────────────────────────────────────────────────────
+  let db = null;
+  let currentUser = null;
+  let allVotes = {};  // { "topicId": Set<name> }
+  let unsubscribe = null;
+
+  // ─────────────────────────────────────────────────────────────
+  // 🔑  AUTH
+  // ─────────────────────────────────────────────────────────────
+  window.checkCode = function() {
+    const val = document.getElementById('code-input').value.trim();
+    const err = document.getElementById('code-error');
+
+    if (val.toUpperCase() === ACCESS_CODE.toUpperCase()) {
+      err.style.display = 'none';
+      // advance to step 2
+      document.getElementById('step-code').style.display = 'none';
+      document.getElementById('step-name').style.display = 'block';
+      document.getElementById('dot-1').classList.remove('active');
+      document.getElementById('dot-2').classList.add('active');
+    } else {
+      err.style.display = 'block';
+      document.getElementById('code-input').focus();
+    }
+  };
+
+  window.enterApp = function() {
+    const name = document.getElementById('name-select').value;
+    const err  = document.getElementById('name-error');
+    if (!name) { err.style.display = 'block'; return; }
+    err.style.display = 'none';
+
+    currentUser = name;
+    localStorage.setItem('forum_user', name);
+
+    // init Firebase and render
+    initFirebase();
+  };
+
+  window.signOut = function() {
+    if (unsubscribe) unsubscribe();
+    currentUser = null;
+    localStorage.removeItem('forum_user');
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('auth-overlay').style.display = 'flex';
+    document.getElementById('step-code').style.display = 'block';
+    document.getElementById('step-name').style.display = 'none';
+    document.getElementById('code-input').value = '';
+    document.getElementById('dot-1').classList.add('active');
+    document.getElementById('dot-2').classList.remove('active');
+  };
+
+  // Allow pressing Enter in the code input
+  document.getElementById('code-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.checkCode();
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // 🔥  FIREBASE INIT
+  // ─────────────────────────────────────────────────────────────
+  function initFirebase() {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+
+    document.getElementById('user-display').textContent = currentUser;
+    document.getElementById('auth-overlay').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+
+    subscribeToVotes();
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // 📡  REALTIME VOTE LISTENER
+  // ─────────────────────────────────────────────────────────────
+  function subscribeToVotes() {
+    const votesRef = collection(db, 'votes');
+    unsubscribe = onSnapshot(votesRef, snapshot => {
+      // Rebuild allVotes map
+      allVotes = {};
+      snapshot.forEach(docSnap => {
+        const { topicId, name } = docSnap.data();
+        if (!allVotes[topicId]) allVotes[topicId] = new Set();
+        allVotes[topicId].add(name);
+      });
+      renderSections();
+    });
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // 🎨  RENDER
+  // ─────────────────────────────────────────────────────────────
+  function renderSections() {
+    renderList('fsfe',     TOPICS.fsfe,     'fsfe-list',     'fsfe-meta');
+    renderList('learning', TOPICS.learning, 'learning-list', 'learning-meta');
+  }
+
+  function renderList(sectionId, topics, listId, metaId) {
+    const container = document.getElementById(listId);
+    const metaEl    = document.getElementById(metaId);
+
+    const active = topics.filter(t => !t.done);
+    const total  = active.reduce((sum, t) => sum + (allVotes[t.id]?.size || 0), 0);
+    metaEl.textContent = `${active.length} topics · ${total} vote${total !== 1 ? 's' : ''} cast`;
+
+    // Sort active topics by vote count desc, done items at bottom
+    const sorted = [
+      ...active.sort((a, b) => (allVotes[b.id]?.size || 0) - (allVotes[a.id]?.size || 0)),
+      ...topics.filter(t => t.done)
+    ];
+
+    container.innerHTML = sorted.map(topic => renderTopicRow(topic)).join('');
+
+    // Attach vote handlers
+    container.querySelectorAll('[data-topic-id]').forEach(btn => {
+      btn.addEventListener('click', () => toggleVote(btn.dataset.topicId));
+    });
+  }
+
+  function renderTopicRow(topic) {
+    const voters  = allVotes[topic.id] || new Set();
+    const count   = voters.size;
+    const iVoted  = voters.has(currentUser);
+    const votersArr = [...voters];
+
+    if (topic.done) {
+      return `
+        <div class="topic-row done">
+          <span class="topic-text">${escHtml(topic.text)}</span>
+          <span class="done-badge">✓ Done</span>
+        </div>`;
+    }
+
+    const voterLabel = votersArr.length
+      ? `<span class="voters-list">${votersArr.join(', ')}</span>`
+      : '';
+
+    return `
+      <div class="topic-row${iVoted ? ' my-voted' : ''}">
+        <span class="topic-text">${escHtml(topic.text)}</span>
+        ${voterLabel}
+        <div class="vote-area">
+          <span class="vote-count${count > 0 ? ' has-votes' : ''}">${count || ''}</span>
+          <button
+            class="vote-btn${iVoted ? ' voted' : ''}"
+            data-topic-id="${topic.id}"
+            title="${iVoted ? 'Remove your vote' : 'Upvote this topic'}"
+          >▲</button>
+        </div>
+      </div>`;
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // 🗳️  VOTE TOGGLE
+  // ─────────────────────────────────────────────────────────────
+  async function toggleVote(topicId) {
+    if (!db || !currentUser) return;
+
+    const docId  = `${topicId}_${currentUser.toLowerCase()}`;
+    const docRef = doc(db, 'votes', docId);
+    const voters = allVotes[topicId] || new Set();
+
+    if (voters.has(currentUser)) {
+      await deleteDoc(docRef);
+    } else {
+      await setDoc(docRef, {
+        topicId,
+        name: currentUser,
+        timestamp: Date.now()
+      });
+    }
+    // onSnapshot will fire and re-render automatically
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // 🛠  UTILS
+  // ─────────────────────────────────────────────────────────────
+  function escHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // 🚀  CHECK FOR SAVED SESSION
+  // ─────────────────────────────────────────────────────────────
+  // (Optional convenience: skip re-auth on same device. Remove if unwanted.)
+  // Deliberately not auto-entering since we want name re-confirmation per session.
+</script>
+
+</body>
+</html>
