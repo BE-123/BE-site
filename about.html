@@ -4,390 +4,79 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About — Beta Endeavors</title>
+  <meta name="description" content="Arun Gupta is a seasoned founder and executive with 20 years of venture-backed start-up experience, including 3 IPOs, 10+ exits, and significant CEO, Chairman, and Independent Director service." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="https://betaendeavors.com/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --ink: #0e0e0e;
-      --cream: #f7f4ee;
-      --gold: #c9a84c;
-      --gold-light: #e8d5a3;
-      --steel: #4a5568;
-      --line: rgba(14,14,14,0.12);
-      --nav-h: 72px;
+      --ink: #0e0e0e; --cream: #f7f4ee; --gold: #c9a84c; --gold-light: #e8d5a3;
+      --steel: #4a5568; --line: rgba(14,14,14,0.12); --nav-h: 72px;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--cream);
-      color: var(--ink);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: var(--nav-h);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 5vw;
-      z-index: 100;
-      background: rgba(247,244,238,0.95);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 1px 0 var(--line);
-    }
-    .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.35rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: var(--ink);
-      text-decoration: none;
-    }
-    .nav-logo span { color: var(--gold); }
+    body { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; overflow-x: hidden; }
+    nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; z-index: 100; background: rgba(247,244,238,0.95); backdrop-filter: blur(12px); box-shadow: 0 1px 0 var(--line); }
+    .nav-logo { display: inline-flex; align-items: center; text-decoration: none; line-height: 0; }
+    .nav-logo img { height: 36px; width: auto; }
     .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a {
-      font-size: 0.8rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ink);
-      text-decoration: none;
-      opacity: 0.6;
-      transition: opacity 0.2s;
-    }
+    .nav-links a { font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); text-decoration: none; opacity: 0.6; transition: opacity 0.2s; }
     .nav-links a:hover, .nav-links a.active { opacity: 1; }
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 4px;
-    }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
     .hamburger span { display: block; width: 24px; height: 1.5px; background: var(--ink); }
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: var(--cream);
-      z-index: 99;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2.5rem;
-    }
+    .mobile-menu { display: none; position: fixed; inset: 0; background: var(--cream); z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem; }
     .mobile-menu.open { display: flex; }
-    .mobile-menu a {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.5rem;
-      font-weight: 300;
-      color: var(--ink);
-      text-decoration: none;
-    }
-
-    /* PAGE HEADER */
-    .page-header {
-      padding-top: calc(var(--nav-h) + 5rem);
-      padding-bottom: 3rem;
-      padding-left: 5vw;
-      padding-right: 5vw;
-      border-bottom: 1px solid var(--line);
-    }
-    .page-tag {
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1rem;
-    }
-    .page-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 5vw, 4.5rem);
-      font-weight: 300;
-      line-height: 1.1;
-    }
-
-    /* PROFILE SECTION */
-    .profile-section {
-      padding: 6rem 5vw;
-      display: grid;
-      grid-template-columns: 400px 1fr;
-      gap: 6rem;
-      align-items: start;
-    }
-    .profile-photo-wrap {
-      position: sticky;
-      top: calc(var(--nav-h) + 2rem);
-    }
-    .photo-frame {
-      position: relative;
-      display: inline-block;
-      width: 100%;
-    }
-    .photo-frame::before {
-      content: '';
-      position: absolute;
-      top: 16px; left: 16px;
-      right: -16px; bottom: -16px;
-      border: 1px solid var(--gold);
-      z-index: 0;
-    }
-    .photo-placeholder {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      aspect-ratio: 3/4;
-      background: var(--ink);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .photo-placeholder::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 30%, rgba(201,168,76,0.15) 0%, transparent 65%);
-    }
-    .photo-initials {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 6rem;
-      font-weight: 300;
-      color: var(--gold);
-      opacity: 0.4;
-      line-height: 1;
-      position: relative;
-      z-index: 1;
-    }
-    .photo-note {
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(247,244,238,0.3);
-      margin-top: 1rem;
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 0 1.5rem;
-    }
-
-    /* If user adds a real image, show it */
-    .photo-actual {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      aspect-ratio: 3/4;
-      object-fit: cover;
-      display: block;
-    }
-
-    .profile-meta {
-      margin-top: 2rem;
-    }
-    .profile-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
-    .profile-role {
-      font-size: 0.8rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.2rem;
-    }
-    .profile-links {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .profile-link {
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--steel);
-      text-decoration: none;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 2px;
-      transition: color 0.2s, border-color 0.2s;
-    }
+    .mobile-menu a { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--ink); text-decoration: none; }
+    .page-header { padding-top: calc(var(--nav-h) + 5rem); padding-bottom: 3rem; padding-left: 5vw; padding-right: 5vw; border-bottom: 1px solid var(--line); }
+    .page-tag { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    .page-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.1; }
+    .profile-section { padding: 6rem 5vw; display: grid; grid-template-columns: 400px 1fr; gap: 6rem; align-items: start; }
+    .profile-photo-wrap { position: sticky; top: calc(var(--nav-h) + 2rem); }
+    .photo-frame { position: relative; display: inline-block; width: 100%; }
+    .photo-frame::before { content: ''; position: absolute; top: 16px; left: 16px; right: -16px; bottom: -16px; border: 1px solid var(--gold); z-index: 0; }
+    .photo-placeholder { position: relative; z-index: 1; width: 100%; aspect-ratio: 3/4; background: var(--ink); overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .photo-placeholder::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(201,168,76,0.15) 0%, transparent 65%); }
+    .photo-initials { font-family: 'Cormorant Garamond', serif; font-size: 6rem; font-weight: 300; color: var(--gold); opacity: 0.4; line-height: 1; position: relative; z-index: 1; }
+    .photo-actual { position: relative; z-index: 1; width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+    .profile-meta { margin-top: 2rem; }
+    .profile-name { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .profile-role { font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; }
+    .profile-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .profile-link { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--steel); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; transition: color 0.2s, border-color 0.2s; }
     .profile-link:hover { color: var(--gold); border-color: var(--gold); }
-
-    /* BIO CONTENT */
-    .bio-content h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.8rem, 2.8vw, 2.4rem);
-      font-weight: 300;
-      line-height: 1.25;
-      margin-bottom: 2rem;
-    }
+    .bio-content h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 2.8vw, 2.4rem); font-weight: 300; line-height: 1.25; margin-bottom: 2rem; }
     .bio-content h2 em { font-style: italic; color: var(--gold); }
-    .bio-lead {
-      font-size: 1.1rem;
-      line-height: 1.8;
-      color: var(--ink);
-      margin-bottom: 2rem;
-      border-left: 2px solid var(--gold);
-      padding-left: 1.5rem;
-    }
-    .bio-body {
-      font-size: 0.95rem;
-      color: var(--steel);
-      line-height: 1.9;
-    }
+    .bio-lead { font-size: 1.1rem; line-height: 1.8; color: var(--ink); margin-bottom: 2rem; border-left: 2px solid var(--gold); padding-left: 1.5rem; }
+    .bio-body { font-size: 0.95rem; color: var(--steel); line-height: 1.9; }
     .bio-body p + p { margin-top: 1.25rem; }
-
-    /* EXPERTISE */
-    .expertise-grid {
-      margin-top: 3.5rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      border: 1px solid var(--line);
-    }
-    .expertise-item {
-      padding: 1.5rem 1.75rem;
-      border: 1px solid var(--line);
-      font-size: 0.85rem;
-      color: var(--steel);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .expertise-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--gold);
-      flex-shrink: 0;
-    }
-
-    /* CAREER TIMELINE */
-    .timeline-section {
-      padding: 6rem 5vw;
-      background: var(--ink);
-      color: var(--cream);
-    }
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 1.5rem;
-      margin-bottom: 4rem;
-    }
+    .expertise-grid { margin-top: 3.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; border: 1px solid var(--line); }
+    .expertise-item { padding: 1.5rem 1.75rem; border: 1px solid var(--line); font-size: 0.85rem; color: var(--steel); display: flex; align-items: center; gap: 0.75rem; }
+    .expertise-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+    .timeline-section { padding: 6rem 5vw; background: var(--ink); color: var(--cream); }
+    .section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 4rem; }
     .section-num { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; color: var(--gold); letter-spacing: 0.1em; }
     .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; color: var(--cream); }
     .section-line { flex: 1; height: 1px; background: rgba(247,244,238,0.1); margin-left: 1rem; margin-bottom: 4px; }
-
-    .timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      max-width: 780px;
-    }
-    .timeline-item {
-      display: grid;
-      grid-template-columns: 160px 1fr;
-      gap: 2.5rem;
-      padding: 2.25rem 0;
-      border-bottom: 1px solid rgba(247,244,238,0.08);
-      position: relative;
-    }
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: 160px;
-      top: 0; bottom: 0;
-      width: 1px;
-      background: rgba(201,168,76,0.2);
-    }
-    .timeline-period {
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      color: var(--gold);
-      padding-top: 4px;
-      text-align: right;
-      padding-right: 2.5rem;
-    }
+    .timeline { display: flex; flex-direction: column; gap: 0; max-width: 780px; }
+    .timeline-item { display: grid; grid-template-columns: 160px 1fr; gap: 2.5rem; padding: 2.25rem 0; border-bottom: 1px solid rgba(247,244,238,0.08); position: relative; }
+    .timeline-item::before { content: ''; position: absolute; left: 160px; top: 0; bottom: 0; width: 1px; background: rgba(201,168,76,0.2); }
+    .timeline-period { font-size: 0.75rem; letter-spacing: 0.1em; color: var(--gold); padding-top: 4px; text-align: right; padding-right: 2.5rem; }
     .timeline-right { padding-left: 2.5rem; }
-    .timeline-org {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--cream);
-      margin-bottom: 0.2rem;
-    }
-    .timeline-role {
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(247,244,238,0.4);
-      margin-bottom: 0.6rem;
-    }
-    .timeline-desc {
-      font-size: 0.88rem;
-      color: rgba(247,244,238,0.55);
-      line-height: 1.7;
-    }
-
-    /* CTA */
-    .about-cta {
-      padding: 7rem 5vw;
-      text-align: center;
-    }
-    .about-cta h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 3.5vw, 3rem);
-      font-weight: 300;
-      margin-bottom: 1.25rem;
-    }
+    .timeline-org { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: var(--cream); margin-bottom: 0.2rem; }
+    .timeline-role { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(247,244,238,0.4); margin-bottom: 0.6rem; }
+    .timeline-desc { font-size: 0.88rem; color: rgba(247,244,238,0.55); line-height: 1.7; }
+    .about-cta { padding: 7rem 5vw; text-align: center; }
+    .about-cta h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; margin-bottom: 1.25rem; }
     .about-cta h2 em { font-style: italic; color: var(--gold); }
     .about-cta p { color: var(--steel); max-width: 420px; margin: 0 auto 2.5rem; }
-    .btn-primary {
-      display: inline-block;
-      padding: 0.85rem 2.2rem;
-      background: var(--ink);
-      color: var(--cream);
-      font-size: 0.78rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: background 0.25s, transform 0.2s;
-    }
+    .btn-primary { display: inline-block; padding: 0.85rem 2.2rem; background: var(--ink); color: var(--cream); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; transition: background 0.25s, transform 0.2s; }
     .btn-primary:hover { background: var(--gold); transform: translateY(-2px); }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 2.5rem 5vw;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
+    footer { border-top: 1px solid var(--line); padding: 2.5rem 5vw; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
     .footer-copy { font-size: 0.78rem; color: var(--steel); opacity: 0.5; }
     .footer-links { display: flex; gap: 1.5rem; list-style: none; }
-    .footer-links a {
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--steel);
-      text-decoration: none;
-      opacity: 0.5;
-      transition: opacity 0.2s;
-    }
+    .footer-links a { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--steel); text-decoration: none; opacity: 0.5; transition: opacity 0.2s; }
     .footer-links a:hover { opacity: 1; }
-
-    /* RESPONSIVE */
     @media (max-width: 960px) {
       .profile-section { grid-template-columns: 1fr; gap: 3rem; }
       .profile-photo-wrap { position: static; max-width: 320px; }
@@ -395,8 +84,7 @@
       .timeline-item::before { left: 120px; }
     }
     @media (max-width: 600px) {
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
+      .nav-links { display: none; } .hamburger { display: flex; }
       .expertise-grid { grid-template-columns: 1fr; }
       .timeline-item { grid-template-columns: 1fr; gap: 0.4rem; }
       .timeline-item::before { display: none; }
@@ -407,83 +95,65 @@
   </style>
 </head>
 <body>
-
   <nav>
-    <a class="nav-logo" href="index.html">Beta<span>.</span>Endeavors</a>
+    <a class="nav-logo" href="/"><img src="logo.svg" alt="Beta Endeavors" /></a>
     <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html" class="active">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="/#about" class="active">About</a></li>
+      <li><a href="/#contact">Contact</a></li>
     </ul>
     <button class="hamburger" id="menuBtn" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
-
   <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html" onclick="closeMenu()">Home</a>
-    <a href="about.html" onclick="closeMenu()">About</a>
-    <a href="contact.html" onclick="closeMenu()">Contact</a>
+    <a href="/" onclick="closeMenu()">Home</a>
+    <a href="/#about" onclick="closeMenu()">About</a>
+    <a href="/#contact" onclick="closeMenu()">Contact</a>
   </div>
 
-  <!-- PAGE HEADER -->
   <div class="page-header">
     <p class="page-tag">About</p>
     <h1 class="page-title">The person<br>behind the platform</h1>
   </div>
 
-  <!-- PROFILE -->
   <section class="profile-section">
     <div class="profile-photo-wrap">
       <div class="photo-frame">
-        <!--
-          TO ADD YOUR PHOTO:
-          Replace the .photo-placeholder div below with:
-          <img src="arun-gupta.jpg" alt="Arun Gupta" class="photo-actual" />
-        -->
-        <div class="photo-placeholder">
-          <div class="photo-initials">AG</div>
-          <p class="photo-note">Add your photo here — replace with an &lt;img&gt; tag</p>
-        </div>
+        <img src="arun-gupta.jpg" alt="Arun Gupta" class="photo-actual" />
       </div>
       <div class="profile-meta">
         <h2 class="profile-name">Arun Gupta</h2>
-        <p class="profile-role">Founder, Beta Endeavors</p>
+        <p class="profile-role">Founder &amp; Principal Advisor</p>
         <div class="profile-links">
           <a href="https://www.linkedin.com/in/arungupta1/" target="_blank" class="profile-link">LinkedIn</a>
           <a href="mailto:hello@betaendeavors.com" class="profile-link">Email</a>
         </div>
       </div>
     </div>
-
     <div class="bio-content">
-      <h2>Technology leader. <em>Ecosystem builder.</em> Strategic advisor.</h2>
-
+      <h2>Founder. Executive. <em>Strategic advisor.</em></h2>
       <p class="bio-lead">
-        Arun Gupta is a seasoned technology executive, open source champion, and strategic advisor with over two decades of experience building and scaling developer communities, enterprise platforms, and global technology organizations.
+        Arun Gupta is a seasoned founder and executive with 20 years of venture-backed start-up experience, including 3 IPOs, 10+ exits and significant CEO, Chairman, and Independent Director service.
       </p>
-
       <div class="bio-body">
-        <p>Arun has held leadership roles at some of the world's most influential technology companies — including AWS, Couchbase, and Red Hat — where he drove developer relations, cloud strategy, and product evangelism at a global scale. His work has helped define how modern enterprises adopt open source, cloud-native, and distributed technologies.</p>
-        <p>Known for his ability to translate deep technical expertise into compelling strategic narratives, Arun has spoken at hundreds of conferences worldwide and built large, engaged developer communities from the ground up. He brings a rare combination of hands-on engineering background and executive-level perspective to every engagement.</p>
-        <p>Through Beta Endeavors, Arun advises founders, investors, and enterprise teams on technology strategy, go-to-market approaches, developer ecosystems, and organizational design — helping them move faster, think more clearly, and build with greater intention.</p>
-        <p>He is passionate about open source software, community-led growth, and the transformative power of putting the right tools in the hands of developers.</p>
+        <p>Arun Gupta is an experienced founder, CEO, and Board Chairman of high-impact, high-ambition technology start-ups. His biggest current involvement is serving as Executive Chairman of the Board of Parallel Systems, an autonomy company building battery-electric, self-propelled rail cars and the software operating system to power autonomous freight operations.</p>
+        <p>Arun previously played key leadership and Board roles in the founding and/or scale-ups of over 10 start-ups, including Quartet Health, iD Tech, Accolade, and Palantir Technologies. Earlier in his career, Arun was a Venture Builder and General Partner at Accretive, which built over 10 industry-defining technology companies including several IPOs. He also held roles at McKinsey &amp; Company and The World Bank.</p>
+        <p>Arun earned a Master's Degree from the Harvard Kennedy School where he was a Reynolds Fellow for Social Entrepreneurship and graduated with honors from Duke University. He currently serves on several private company Boards, not-for-profit Boards, and advises venture capital and growth equity investors as well as large corporates on AI, technology, and innovation.</p>
       </div>
-
       <div class="expertise-grid">
-        <div class="expertise-item"><span class="expertise-dot"></span>Developer Relations & Ecosystems</div>
-        <div class="expertise-item"><span class="expertise-dot"></span>Cloud & Open Source Strategy</div>
-        <div class="expertise-item"><span class="expertise-dot"></span>Technical Go-to-Market</div>
-        <div class="expertise-item"><span class="expertise-dot"></span>Startup & Venture Advisory</div>
-        <div class="expertise-item"><span class="expertise-dot"></span>Engineering Leadership</div>
-        <div class="expertise-item"><span class="expertise-dot"></span>Enterprise Transformation</div>
-        <div class="expertise-item"><span class="expertise-dot"></span>Community-Led Growth</div>
-        <div class="expertise-item"><span class="expertise-dot"></span>Product & Platform Strategy</div>
+        <div class="expertise-item"><span class="expertise-dot"></span>Strategic Advisory</div>
+        <div class="expertise-item"><span class="expertise-dot"></span>Venture Support &amp; Exits</div>
+        <div class="expertise-item"><span class="expertise-dot"></span>Product Development</div>
+        <div class="expertise-item"><span class="expertise-dot"></span>Go-to-Market Strategy</div>
+        <div class="expertise-item"><span class="expertise-dot"></span>Org Design &amp; Leadership</div>
+        <div class="expertise-item"><span class="expertise-dot"></span>Board Success</div>
+        <div class="expertise-item"><span class="expertise-dot"></span>AI &amp; Technology Innovation</div>
+        <div class="expertise-item"><span class="expertise-dot"></span>Capital &amp; Fundraising</div>
       </div>
     </div>
   </section>
 
-  <!-- TIMELINE -->
   <section class="timeline-section">
     <div class="section-header">
       <span class="section-num">01</span>
@@ -495,60 +165,58 @@
         <span class="timeline-period">Present</span>
         <div class="timeline-right">
           <p class="timeline-org">Beta Endeavors</p>
-          <p class="timeline-role">Founder & Principal Advisor</p>
+          <p class="timeline-role">Founder &amp; Principal Advisor</p>
           <p class="timeline-desc">Strategic advisory platform serving founders, investors, and enterprise leaders across technology, venture, and product strategy.</p>
         </div>
       </div>
       <div class="timeline-item">
-        <span class="timeline-period">AWS</span>
+        <span class="timeline-period">Present</span>
         <div class="timeline-right">
-          <p class="timeline-org">Amazon Web Services</p>
-          <p class="timeline-role">Principal Technologist</p>
-          <p class="timeline-desc">Drove developer advocacy and community strategy for AWS, helping shape cloud-native adoption across the global developer ecosystem.</p>
+          <p class="timeline-org">Parallel Systems</p>
+          <p class="timeline-role">Executive Chairman of the Board</p>
+          <p class="timeline-desc">Leading the board of an autonomy company building battery-electric, self-propelled rail cars and the software operating system to power autonomous freight operations.</p>
         </div>
       </div>
       <div class="timeline-item">
-        <span class="timeline-period">Couchbase</span>
+        <span class="timeline-period">Prior</span>
         <div class="timeline-right">
-          <p class="timeline-org">Couchbase</p>
-          <p class="timeline-role">Chief Evangelist</p>
-          <p class="timeline-desc">Led technical evangelism and developer community efforts for the NoSQL database platform, growing awareness and enterprise adoption globally.</p>
+          <p class="timeline-org">Quartet Health, iD Tech, Accolade, Palantir Technologies</p>
+          <p class="timeline-role">Founder / Executive / Board Director</p>
+          <p class="timeline-desc">Key leadership and Board roles across 10+ start-ups, including companies that achieved IPOs and significant exits.</p>
         </div>
       </div>
       <div class="timeline-item">
-        <span class="timeline-period">Red Hat</span>
+        <span class="timeline-period">Prior</span>
         <div class="timeline-right">
-          <p class="timeline-org">Red Hat</p>
-          <p class="timeline-role">Senior Principal Architect</p>
-          <p class="timeline-desc">Delivered architectural guidance and technology advocacy for enterprise Java, middleware, and cloud technologies during a transformative era for open source.</p>
+          <p class="timeline-org">Accretive</p>
+          <p class="timeline-role">Venture Builder &amp; General Partner</p>
+          <p class="timeline-desc">Built over 10 industry-defining technology companies including several IPOs as a venture builder and general partner.</p>
         </div>
       </div>
       <div class="timeline-item">
-        <span class="timeline-period">Sun / Oracle</span>
+        <span class="timeline-period">Early Career</span>
         <div class="timeline-right">
-          <p class="timeline-org">Sun Microsystems / Oracle</p>
-          <p class="timeline-role">Staff Engineer & Technology Evangelist</p>
-          <p class="timeline-desc">Deep technical work on Java EE, GlassFish, and enterprise platforms — building one of the world's largest developer communities from within.</p>
+          <p class="timeline-org">McKinsey &amp; Company / The World Bank</p>
+          <p class="timeline-role">Consultant / Advisor</p>
+          <p class="timeline-desc">Strategic consulting and advisory work across global technology and economic development initiatives.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
   <section class="about-cta">
     <h2>Let's build something <em>together</em></h2>
     <p>Have a challenge worth exploring? I'd love to hear about it.</p>
-    <a href="contact.html" class="btn-primary">Start a Conversation</a>
+    <a href="/#contact" class="btn-primary">Start a Conversation</a>
   </section>
 
-  <!-- FOOTER -->
   <footer>
-    <a class="nav-logo" href="index.html">Beta<span>.</span>Endeavors</a>
-    <span class="footer-copy">© 2025 Beta Endeavors. All rights reserved.</span>
+    <a class="nav-logo" href="/"><img src="logo.svg" alt="Beta Endeavors" /></a>
+    <span class="footer-copy">© 2026 Beta Endeavors. All rights reserved.</span>
     <ul class="footer-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#contact">Contact</a></li>
     </ul>
   </footer>
 
